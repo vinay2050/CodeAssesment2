@@ -26,8 +26,6 @@ namespace CodeAssesment.API.Controllers
         }
 
 
-
-
         [HttpPost]
         [Route("RefreshCache")]
         public async Task<IActionResult> RefreshCache()
