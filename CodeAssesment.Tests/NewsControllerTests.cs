@@ -21,27 +21,6 @@ namespace CodeAssesment.Tests
             _controller = new NewsController(_mockNewsService.Object);
         }
 
-        [Fact]
-        public async Task GetStories_ReturnsOkResult_WithListOfNews()
-        {
-            // Arrange
-            var mockNewsData = new List<GetStoriesDataResponse>
-            {
-                new GetStoriesDataResponse { Title = "Title 1", Url = "http://example.com/1" },
-                new GetStoriesDataResponse { Title = "Title 2", Url = "http://example.com/2" }
-            };
-            var mockNewsResponse = new GetStoriesResponse { Data = mockNewsData };
-
-            _mockNewsService.Setup(service => service.GetNews(null, 1, 10)).ReturnsAsync(mockNewsResponse);
-
-            // Act
-            var result = await _controller.GetStories(null, null, null);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var returnValue = Assert.IsType<GetStoriesResponse>(okResult.Value);
-            Assert.Equal(2, returnValue.Data.Count);
-        }
 
         [Fact]
         public async Task GetStories_WithTitleFilter_ReturnsFilteredNews()

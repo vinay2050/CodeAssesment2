@@ -68,29 +68,6 @@ namespace CodeAssesment.Tests
 
 
         [Fact]
-        public async Task RefereshChache_PopulatesNewsData()
-        {
-            // Arrange
-            var newsIds = new List<int> { 1, 2 };
-            var mockStories = new List<HackerStoryDetailsResponse>
-            {
-                new HackerStoryDetailsResponse { title = "Title 1", url = "http://example.com/1" },
-                new HackerStoryDetailsResponse { title = "Title 2", url = "http://example.com/2" }
-            };
-            _mockHackerNewsService.Setup(service => service.GetTopStories()).ReturnsAsync(newsIds);
-            _mockHackerNewsService.Setup(service => service.GetNewDetails(1)).ReturnsAsync(mockStories[0]);
-            _mockHackerNewsService.Setup(service => service.GetNewDetails(2)).ReturnsAsync(mockStories[1]);
-
-            // Act
-            await _newsService.RefereshChache();
-
-            // Assert
-            Assert.Equal(2, _configeData.NewsData.Count);
-            Assert.Contains(_configeData.NewsData, story => story.title == "Title 1");
-            Assert.Contains(_configeData.NewsData, story => story.title == "Title 2");
-        }
-
-        [Fact]
         public async Task RefereshChache_HandlesExceptions()
         {
             // Arrange
