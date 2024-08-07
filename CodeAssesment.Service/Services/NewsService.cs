@@ -60,7 +60,7 @@ namespace CodeAssesment.Service.Services
                 _configeData.NewsData = new List<HackerStoryDetailsResponse>();
                 try
                 {
-                    var newsIds = await _service.GetTopStories();
+                    var newsIds = (await _service.GetTopStories()).Take(200).ToList();
                     var tasks = newsIds.Select(id => GetStoryDetailsAsync(id)).ToArray();
                     var storyDetailsList = await Task.WhenAll(tasks);
                     _configeData.NewsData.AddRange(storyDetailsList.Where(details => details != null));
