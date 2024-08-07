@@ -21,18 +21,9 @@ namespace CodeAssesment.API.Controllers
         [Route("GetStories")]
         public async Task<IActionResult> GetStories([FromQuery] string? title, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
-           var data= await _newsService.GetNews(title, pageNumber??1, pageSize??10);
+            await _newsService.RefereshChache();
+            var data = await _newsService.GetNews(title ?? "", pageNumber ?? 1, pageSize ?? 10);
             return Ok(data);
         }
-
-
-        [HttpPost]
-        [Route("RefreshCache")]
-        public async Task<IActionResult> RefreshCache()
-        {
-            await _newsService.RefereshChache();
-            return Ok("Success");
-        }
-
     }
 }

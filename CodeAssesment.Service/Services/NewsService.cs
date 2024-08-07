@@ -45,9 +45,7 @@ namespace CodeAssesment.Service.Services
                     });
                 }
             }
-            catch (Exception ex)
-            {
-            }
+            catch (Exception ex) { Console.WriteLine("An error occurred while Getting Stories Response: " + ex.Message); }
             return getStoriesResponse;
         }
        private IList<HackerStoryDetailsResponse> GetPage(IList<HackerStoryDetailsResponse> list, int page, int pageSize)
@@ -55,22 +53,30 @@ namespace CodeAssesment.Service.Services
             return list.Skip((page-1) * pageSize).Take(pageSize).ToList();
         }
 
-
         public async Task RefereshChache()
         {
-            _configeData.NewsData=new List<HackerStoryDetailsResponse>();
-            try
+            if (_configeData.NewsData == null)
             {
-                var newsIds = await _service.GetTopStories();
-                foreach (var id in newsIds)
+                _configeData.NewsData = new List<HackerStoryDetailsResponse>();
+                try
                 {
-                    var storyDetails = await _service.GetNewDetails(id);
-                    _configeData.NewsData.Add(storyDetails);
+                    var newsIds = await _service.GetTopStories();
+                    var tasks = newsIds.Select(id => GetStoryDetailsAsync(id)).ToArray();
+                    var storyDetailsList = await Task.WhenAll(tasks);
+                    _configeData.NewsData.AddRange(storyDetailsList.Where(details => details != null));
                 }
-            }
-            catch (Exception ex)
-            {
+                catch (Exception ex) { Console.WriteLine("An error occurred while refreshing the cache: " + ex.Message); }
             }
         }
+
+        private async Task<HackerStoryDetailsResponse> GetStoryDetailsAsync(int id)
+        {
+            try
+            {
+                return await _service.GetNewDetails(id);
+            }
+            catch (Exception ex) { return null; }
+        }
+
     }
 }

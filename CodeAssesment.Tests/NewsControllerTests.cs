@@ -64,19 +64,5 @@ namespace CodeAssesment.Tests
             Assert.Single(returnValue.Data);
             Assert.Equal("Title 1", returnValue.Data[0].Title);
         }
-
-        [Fact]
-        public async Task RefreshCache_ReturnsOkResult()
-        {
-            // Arrange
-            _mockNewsService.Setup(service => service.RefereshChache()).Returns(Task.CompletedTask);
-
-            // Act
-            var result = await _controller.RefreshCache();
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            Assert.Equal("Success", okResult.Value);
-        }
     }
 }
